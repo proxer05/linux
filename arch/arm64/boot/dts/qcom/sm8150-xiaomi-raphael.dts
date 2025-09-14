@@ -257,7 +257,7 @@
 			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
 		};
 
-                vdd_usb_hs_core:
+        vdd_usb_hs_core:
 		vdda_mipi_csi_0_0p9:
 		vdda_mipi_csi_1_0p9:
 		vdda_mipi_csi_2_0p9:
@@ -488,6 +488,10 @@
 	};
 };
 
+&gpi_dma2 {
+	status = "okay";
+};
+
 &gmu {
 	status = "okay";
 };
@@ -498,6 +502,34 @@
 	zap-shader {
 		memory-region = <&gpu_mem>;
 		firmware-name = "qcom/sm8150/Xiaomi/raphael/a640_zap.mbn";
+	};
+};
+
+&i2c19 {
+	clock-frequency = <100000>;
+	status = "okay";
+	goodix@5d {
+		compatible = "goodix,gt9889";
+		reg = <0x5d>;
+		status = "okay";
+		interrupt-parent = <&tlmm>;
+		interrupts = <122 0x2800>;
+		vtouch-load = <600000>;
+		pinctrl-names = "default", "sleep";
+		pinctrl-0 = <&tp_active>;
+		pinctrl-1 = <&tp_int_suspend &tp_reset_suspend>;
+		goodix,reset-gpio = <&tlmm 54 0x0>;
+		goodix,irq-gpio = <&tlmm 122 0x2800>;
+		goodix,vdd-gpio = <&tlmm 98 0x0>;			/* 3v3 */
+		goodix,avdd-gpio = <&tlmm 100 0x0>;			/* 1v8 */
+		goodix,avdd-name = "vtouch";
+		goodix,irq-flags = <2>; /* 1:trigger rising, 2:trigger falling;*/
+		goodix,panel-max-id = <10>;
+		goodix,panel-max-x = <1079>;
+		goodix,panel-max-y = <2339>;
+		goodix,panel-max-w = <127>;
+		goodix,power-on-delay-us = <300000>; /*300ms*/
+		goodix,power-off-delay-us = <5000>;
 	};
 };
 
@@ -568,6 +600,10 @@
 	status = "okay";
 };
 
+&qupv3_id_2 {
+	status = "okay";
+};
+
 &remoteproc_adsp {
 	status = "okay";
 	firmware-name = "qcom/sm8150/Xiaomi/raphael/adsp.mbn";
@@ -633,6 +669,32 @@
 			drive-strength = <2>;
 			bias-pull-up;
 		};
+	};
+
+	/* GPIOs for touch panel */
+	tp_active: tp_active {
+			pins = "gpio122", "gpio54";
+			function = "gpio";
+			drive-strength = <16>;
+			bias-pull-up;
+	};
+	
+	tp_int_suspend: tp_int_suspend {
+			pins = "gpio122";
+			function = "gpio";
+			drive-strength = <16>;
+			input-enable;
+			slew-rate = <0>;
+			bias-pull-up;
+	};
+
+	tp_reset_suspend: tp_reset_suspend {
+			pins = "gpio54";
+			function = "gpio";
+			drive-strength = <16>;
+			slew-rate = <1>;
+			bias-disable;
+			output-high;
 	};
 };
 
