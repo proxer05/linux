@@ -1097,5 +1097,5 @@
 	vdd-1.3-rfa-supply = <&vdda_wcss_adcdac_1>;
 	vdd-3.3-ch0-supply = <&vreg_l11c_3p3>;
 	vdd-3.3-ch1-supply = <&vreg_l10c_3p3>;
-	qcom,calibration-variant = "xiaomi_raphael";
+	qcom,calibration-variant = "Xiaomi_raphael";
 };
