@@ -49,7 +49,17 @@
 
 	battery: battery {
 		compatible = "simple-battery";
-		charge-full-design-microamp-hours = <4000000>;
+
+		device-chemistry = "lithium-ion-polymer";
+
+		/*
+		 * Keep the maximum charging current conservative for now,
+		 * until we have thermal handling in the charging driver.
+		 * Downstream seems to have a upper limit of 3A.
+		 */
+		constant-charge-current-max-microamp = <1500000>;
+
+//		charge-full-design-microamp-hours = <4000000>;
 		voltage-min-design-microvolt = <3400000>;
 		voltage-max-design-microvolt = <4400000>;
 	};
